@@ -609,12 +609,19 @@ fragment WhiteSpace
 
 
 /*
+fragment Opchar
+    :
+    '@' | '!' | '#' | '%' | '&' | '*' | '?' | '=' | '+'
+    ;
+*/
+/*
 
 opchar ::= // printableChar not matched by (whiteSpace | upper | lower |
                      // letter | digit | paren | delim | opchar | Unicode_Sm | Unicode_So)
 */
 
-Opchar
+
+fragment Opchar
    : ~(
    '\u0020' | '\u0009' | '\u000D' | '\u000A' |
    'A' .. 'Z' | '$' | '_' |
@@ -623,6 +630,7 @@ Opchar
    '(' | ')' | '[' | ']' | '{' | '}' |
    '`' | '\'' | '"' | '.' | ';' | ','
    );
+
 
 
 fragment Op

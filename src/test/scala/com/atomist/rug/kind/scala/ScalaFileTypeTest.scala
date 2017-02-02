@@ -75,7 +75,7 @@ class ScalaFileTypeTest extends FlatSpec with Matchers {
 
   it should "find class in realistic file using path expression" in {
     val f = TestUtils.sideFile(this, "Simple.scala")
-    println(f.content)
+    //println(f.content)
     val sources = SimpleFileBasedArtifactSource(f)
     val scalas: Option[Seq[TreeNode]] = scalaFileType.findAllIn(new ProjectMutableView(EmptyArtifactSource(), sources))
     scalas.size should be(1)
