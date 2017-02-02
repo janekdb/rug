@@ -39,6 +39,15 @@ object TestUtils extends Matchers {
     pe.modify(as, poa)
   }
 
+  def sideFile(caller: Object, name: String): FileArtifact = {
+    val resourcePath = caller.getClass.getPackage.getName.replace(".", "/")
+    println(s"Using resourcePath [$resourcePath]")
+    val raw = ClassPathArtifactSource.toArtifactSource(
+      resourcePath
+    )
+    raw.allFiles.filter(f => f.name == name).head
+  }
+
   /**
     * Compile the named TypeScript file in the package of the caller
     */

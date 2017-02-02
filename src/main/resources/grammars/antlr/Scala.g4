@@ -608,9 +608,17 @@ fragment WhiteSpace
    ;
 
 
-fragment Opchar
-   : PrintableChar
+/*
+opchar           ::= // printableChar not matched by (whiteSpace | upper | lower |
+                     // letter | digit | paren | delim | opchar | Unicode_Sm | Unicode_So)
+*/
+
+fragment Opchar :
+    ~('^');
+    /*
+   : ~('\u0020' | '\u0009' | '\u000D' | '\u000A' | 'A' .. 'Z' | '$' | '_' | 'a' .. 'z')
    ;
+   */
 
 
 fragment Op
@@ -670,6 +678,10 @@ fragment ExponentPart
    : ('E' | 'e') ('+' | '-')? Digit +
    ;
 
+
+/*
+printableChar    ::= // all characters in [\u0020, \u007F] inclusive
+*/
 
 fragment PrintableChar
    : '\u0020' .. '\u007F'

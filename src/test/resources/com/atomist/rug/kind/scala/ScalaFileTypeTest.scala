@@ -12,6 +12,7 @@ class ScalaFileTypeTest extends FlatSpec with Matchers {
   val scalaFileType = new ScalaFileType
 
   it should "parse hello world" in {
+    ???
     val scala = scalaFileType.findAllIn(HelloWorldProject)
     scala.isDefined should be(true)
     scala.get.size should be(1)
@@ -26,24 +27,14 @@ class ScalaFileTypeTest extends FlatSpec with Matchers {
   }
 
   it should "parse multiline content and write out correctly" in {
-    println(s"[$Longer]")
-    val parsed = scalaFileType.parseToRawNode(Longer).get
-    val parsedValue = parsed.value
-    withClue(s"Unexpected content: [$parsedValue]") {
-      parsedValue should equal(Longer)
-    }
-  }
-
-  it should "parse external content and write out correctly" in {
-    val f = TestUtils.sideFile(this, this.getClass.getSimpleName + ".scala")
-    //println(s"[${f.content}]")
+    val f = TestUtils.sideFile(this, this.getClass.getSimpleName)
+    println(s"[${f.content}]")
     val parsed = scalaFileType.parseToRawNode(f.content).get
     val parsedValue = parsed.value
-    //    withClue(s"Unexpected content: [$parsedValue]") {
-    //      parsedValue should equal(Longer)
-    //    }
+//    withClue(s"Unexpected content: [$parsedValue]") {
+//      parsedValue should equal(Longer)
+//    }
   }
-
 
 }
 
