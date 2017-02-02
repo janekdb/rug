@@ -43,6 +43,7 @@ class ModelBuildingListener(
         logger.debug(s"enterEveryRule $rule: ${ctx.getClass} ${ctx.getText}")
         if (ctx.exception != null) {
           // Failed to get a whole match
+          ctx.exception.printStackTrace()
           logger.info("Antlr parse error", ctx.exception)
         }
         else {

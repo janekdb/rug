@@ -439,7 +439,7 @@ typeDef
 
 tmplDef
    : 'case'? 'class' classDef
-   | 'case' 'object' objectDef
+   | 'case'? 'object' objectDef
    | 'trait' traitDef
    ;
 
@@ -608,9 +608,21 @@ fragment WhiteSpace
    ;
 
 
-fragment Opchar
-   : PrintableChar
-   ;
+/*
+
+opchar ::= // printableChar not matched by (whiteSpace | upper | lower |
+                     // letter | digit | paren | delim | opchar | Unicode_Sm | Unicode_So)
+*/
+
+Opchar
+   : ~(
+   '\u0020' | '\u0009' | '\u000D' | '\u000A' |
+   'A' .. 'Z' | '$' | '_' |
+   'a' .. 'z' |
+   '0' .. '9' |
+   '(' | ')' | '[' | ']' | '{' | '}' |
+   '`' | '\'' | '"' | '.' | ';' | ','
+   );
 
 
 fragment Op
