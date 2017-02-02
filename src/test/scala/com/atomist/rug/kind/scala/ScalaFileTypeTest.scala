@@ -23,6 +23,9 @@ class ScalaFileTypeTest extends FlatSpec with Matchers {
     val scala = scalaFileType.findAllIn(HelloWorldProject)
     scala.isDefined should be(true)
     scala.get.size should be(1)
+    val rootNode = scala.get.head
+    println("The root node is " + TreeNodeUtils.toShorterString(rootNode))
+    rootNode.childrenNamed("compilationUnit").size should be (1)
   }
 
   it should "parse hello world and write out correctly" in {
