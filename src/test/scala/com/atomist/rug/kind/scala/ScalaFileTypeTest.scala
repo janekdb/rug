@@ -1,13 +1,21 @@
 package com.atomist.rug.kind.scala
 
 import com.atomist.rug.TestUtils
+import com.atomist.rug.kind.DefaultTypeRegistry
 import com.atomist.rug.kind.core.ProjectMutableView
+import com.atomist.rug.kind.dynamic.MutableContainerMutableView
 import com.atomist.source.{EmptyArtifactSource, SimpleFileBasedArtifactSource, StringFileArtifact}
+import com.atomist.tree.TreeNode
+import com.atomist.tree.content.text.PositionedMutableContainerTreeNode
+import com.atomist.tree.pathexpression.{ExpressionEngine, PathExpressionEngine, PathExpressionParser}
+import com.atomist.tree.utils.TreeNodeUtils
 import org.scalatest.{FlatSpec, Matchers}
 
 class ScalaFileTypeTest extends FlatSpec with Matchers {
 
   import ScalaFileTypeTest._
+
+  val ee: ExpressionEngine = new PathExpressionEngine
 
   val scalaFileType = new ScalaFileType
 
@@ -32,6 +40,9 @@ class ScalaFileTypeTest extends FlatSpec with Matchers {
     withClue(s"Unexpected content: [$parsedValue]") {
       parsedValue should equal(Longer)
     }
+    println(TreeNodeUtils.toShorterString(parsed))
+    println(parsed.asInstanceOf[PositionedMutableContainerTreeNode].fieldValues)
+    // Broken as the contents are wrong
   }
 
   it should "parse external content and write out correctly" in {
@@ -42,6 +53,23 @@ class ScalaFileTypeTest extends FlatSpec with Matchers {
     //    withClue(s"Unexpected content: [$parsedValue]") {
     //      parsedValue should equal(Longer)
     //    }
+  }
+
+  it should "find specification exception class" in {
+    val f = TestUtils.sideFile(this, this.getClass.getSimpleName + ".scala")
+    val sources = SimpleFileBasedArtifactSource(f)
+    val scalas: Option[Seq[TreeNode]] = scalaFileType.findAllIn(new ProjectMutableView(EmptyArtifactSource(), sources))
+    scalas.size should be(1)
+    val scalaFileNode = scalas.get.head.asInstanceOf[MutableContainerMutableView]
+    println(TreeNodeUtils.toShorterString(scalaFileNode))
+    println(scalaFileNode.currentBackingObject.asInstanceOf[PositionedMutableContainerTreeNode].fieldValues)
+
+    val expr = "//classDef"
+    ee.evaluate(scalaFileNode, PathExpressionParser.parseString(expr), DefaultTypeRegistry) match {
+      case Right(nodes) if nodes.nonEmpty =>
+    }
+
+    scalaFileNode.value should equal(f.content)
   }
 
 
