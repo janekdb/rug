@@ -24,7 +24,9 @@ case class ParserSetup(
 abstract class AbstractInMemAntlrGrammar
   extends ToolCustomizer with LazyLogging {
 
-  private val errorStore: ErrorStoringToolListener = new ErrorStoringToolListener
+  private val _errorStore = new ErrorStoringToolListener
+
+  def errorStore: ErrorStoringToolListener = _errorStore
 
   /**
     *
@@ -41,8 +43,8 @@ abstract class AbstractInMemAntlrGrammar
         logger.warn(s"Encountered Antlr exception ${t.getMessage}", t)
     }
     finally {
-      if (errorStore.hasErrors)
-        throw new RugRuntimeException(null, errorStore.toMessage, null)
+      if (_errorStore.hasErrors)
+        throw new RugRuntimeException(null, _errorStore.toMessage, null)
     }
   }
 
@@ -52,8 +54,8 @@ abstract class AbstractInMemAntlrGrammar
   compileGrammar(config.parser)
 
   override def customize(tool: Tool): Unit = {
-    errorStore.setTool(tool)
-    tool.addListener(errorStore)
+    _errorStore.setTool(tool)
+    tool.addListener(_errorStore)
   }
 }
 
